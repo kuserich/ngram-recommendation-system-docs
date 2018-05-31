@@ -1,0 +1,42 @@
+\documentclass{seal_article}
+\usepackage{seal}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{url}
+
+
+\graphicspath{ {./images/} }
+
+\iftexshop
+\usepackage{pdfsync}
+\fi
+
+\title{Stepwise API usage assistance using n-gram language models}
+\subtitle{Advanced Software Engineering, Spring 2018}
+
+\begin{document}
+\maketitle
+
+\iftexshop
+\setprotcode\font
+{\it \setprotcode \font}
+{\bf \setprotcode \font}
+{\bf \it \setprotcode \font}
+\pdfprotrudechars=2
+\fi
+
+\noindent Semester Project\\
+\noindent Markus G\"ockeritz, Julian Iff \& Sebastian Pinegger\\
+\noindent \{markus.goeckeritz, julian.iff, sebastian.pinegger\}@uzh.ch\\
+\noindent Supervisor: Sebastian Proksch
+
+\input{introduction}
+\input{theory}
+\input{technical_implementation}
+\input{ci_cd}
+\input{evaluation_conclusion}
+
+\bibliographystyle{abbrv}
+\bibliography{documentation}
+
+\end{document}
