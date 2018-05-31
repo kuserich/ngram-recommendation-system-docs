@@ -4,8 +4,10 @@
 \usepackage{graphicx}
 \usepackage{url}
 
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
 
-\graphicspath{ {./images/} }
+%\graphicspath{ {./images/} }
 
 \iftexshop
 \usepackage{pdfsync}
@@ -13,30 +15,27 @@
 
 \title{Stepwise API usage assistance using n-gram language models}
 \subtitle{Advanced Software Engineering, Spring 2018}
-
 \begin{document}
-\maketitle
 
-\iftexshop
-\setprotcode\font
-{\it \setprotcode \font}
-{\bf \setprotcode \font}
-{\bf \it \setprotcode \font}
-\pdfprotrudechars=2
-\fi
+% * * * * * * * * * * * * * FRONT MATTER * * * * * * * * * * * * *
+%\frontmatter
+\input{section-title/title}
 
-\noindent Semester Project\\
-\noindent Markus G\"ockeritz, Julian Iff \& Sebastian Pinegger\\
-\noindent \{markus.goeckeritz, julian.iff, sebastian.pinegger\}@uzh.ch\\
-\noindent Supervisor: Sebastian Proksch
+\tableofcontents
 
-\input{introduction}
-\input{theory}
-\input{technical_implementation}
-\input{ci_cd}
-\input{evaluation_conclusion}
+
+
+% * * * * * * * * * * * * * MAIN MATTER * * * * * * * * * * * * *
+%\mainmatter
+
+\input{section-introduction/introduction}
+\input{section-chapter1/theory}
+\input{section-chapter2/technical_implementation}
+\input{section-chapter3/ci_cd}
+\input{section-chapter4/evaluation_conclusion}
+% TODO: add actual conclusion 
 
 \bibliographystyle{abbrv}
-\bibliography{documentation}
+\bibliography{section-references/references}
 
 \end{document}
