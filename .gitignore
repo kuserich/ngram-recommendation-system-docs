@@ -8,4 +8,5 @@
 *.pdfsync
 *.synctex.gz
 *.toc
+*.dvi
 .texpadtmp
