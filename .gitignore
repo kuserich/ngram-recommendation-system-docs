@@ -7,4 +7,5 @@
 *.log
 *.pdfsync
 *.synctex.gz
+*.toc
 .texpadtmp
