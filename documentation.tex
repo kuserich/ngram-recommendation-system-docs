@@ -4,7 +4,6 @@
 \usepackage{graphicx}
 \usepackage{url}
 
-\usepackage{titlesec}
 \newcommand{\sectionbreak}{\clearpage}
 
 %\graphicspath{ {./images/} }
@@ -28,13 +27,19 @@
 % * * * * * * * * * * * * * MAIN MATTER * * * * * * * * * * * * *
 %\mainmatter
 
+\clearpage
 \input{section-introduction/introduction}
+\clearpage
 \input{section-chapter1/theory}
+\clearpage
 \input{section-chapter2/technical_implementation}
+\clearpage
 \input{section-chapter3/ci_cd}
+\clearpage
 \input{section-chapter4/evaluation_conclusion}
 % TODO: add actual conclusion 
 
+\clearpage
 \bibliographystyle{abbrv}
 \bibliography{section-references/references}
 
