@@ -1,7 +1,57 @@
 \section{Technical Implementation}
+\label{section-technicalimplementation}
+In this Section we outline the technical details of our implementation.
+
 \subsection{Sentence Extractor}
+\label{section-sentenceextractor}
+The sentence extractor is one of the three main components and is used to extract all possible \textit{API sentences} from a given code repository. The set of API sentences that is extracted from the code repository form the \textit{sentence sample vocabulary}. That is, consider the set of all possible API sentences $S_V$ of some API vocabulary $V$. The set of extracted API sentences $\Omega$ consists of a sample of observations that is a subset of the superset of the API vocabulary $\Omega \subseteq S_V$.
+We use this sample set to train API-specific $n$-gram language models.
+
+Within a given namespace or \textit{API}, we refer to possible code expressions on the API as \textit{API tokens}.
+An API token is an \textit{invocation expression} and may comprise one of three different types of invocations:
+
+\begin{enumerate}
+	\item \textbf{Instance operation}
+	
+	Any 'normal`, non-static operation on an instance of some class other than its constructor.
+	
+	\item \textbf{Static operation}
+	
+	Any static operation on an instance of some class.
+
+	\item \textbf{Class constructor}
+	
+	Constructor called upon object instantiation.
+\end{enumerate}
+
+We used the static repository data from the KaVE project \cite{Kave} and extracted API sentences from all contexts within this data set.
+
+\subsubsection{API Token}
+\label{section-apitoken}
+
+In order to work with the data that we extract from the static repository data and to be able to build API sentences using tokens we introduce a class \textit{APIToken}.
+An APIToken is a single invocation expression that includes a namespace, type, invocation and operation.
+
+The class APIToken extends the class MethodName and is thus naturally suited to work with and represent the data from \cite{Kave}. Other than shorthand methods and minor adjustments to existing methods, the APIToken class does not differ much from MethodName.
+
 \subsubsection{API Visitor}
-sdfsdfdfdfsgdfg
+\label{section-apivisitor}
+
+The static repository data from the KaVE project contains several preprocessed code repositories represented as \textit{Simplified Syntax Trees} (SSTs) \cite{Kave}.
+
+An SST can comfortably be traversed and processed using the Visitor pattern. Particularly, the KaVE project \cite{Kave} already provides several interfaces and classes that allow for a straightforward implementation of a visitor to extract API sentences from a given SST. 
+
+We introduce a class \textit{APIVisitor} which implements the interface ISSTNodeVisitor to process SSTs.
+
+The APIVisitor is given an ISSTNode statement and an \textit{APISentenceTree} context such that the statement or expression is added to the context if it is an invocation expression. Recall that we are only interested in invocations and hence not extract any other expressions. The APIVisitor will add every invocation expression to the context and ignore all other expressions.
+
+Additionally, an SST may include statements that would allow for several different API sentences. We call such statements \textit{branching statements}. A branching statement is an if-else-expression or any other conditional statement that would allow for multiple different execution paths and thus multiple different API sentences. We collect the tokens at which branching statements appear in the context so that in a later step we can compute multiple sentences from a single context. The details of how this is done is outlined in the following Section.
+
 \subsubsection{API Sentence Tree}
+\label{section-apisentencetree}
+
+We introduce the class \textit{APISentenceTree} and use it as our context in the APIVisitor. That is, an APISentenceTree will store a tree representation of all relevant APITokens from an SST that was processed by the APIVisitor.
+Particularly, an APISentenceTree includes a list of APITokens and a map of lists of APISentenceTrees with APITokens as keys. This map stores the branches.
+
 
 \subsection{Recommender}
