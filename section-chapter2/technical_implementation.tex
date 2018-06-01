@@ -39,11 +39,11 @@ The class APIToken extends the class MethodName and is thus naturally suited to 
 
 The static repository data from the KaVE project contains several preprocessed code repositories represented as \textit{Simplified Syntax Trees} (SSTs) \cite{Kave}.
 
-An SST can comfortably be traversed and processed using the Visitor pattern. Particularly, the KaVE project \cite{Kave} already provides several interfaces and classes that allow for a straightforward implementation of a visitor to extract API sentences from a given SST. 
+An SST can comfortably be traversed and processed using the Visitor pattern. Particularly, the KaVE project \cite{Kave} already provides several interfaces and classes that allow for a straightforward implementation of a visitor to extract API sentences from a given SST.
 
 We introduce a class \textit{APIVisitor} which implements the interface ISSTNodeVisitor to process SSTs.
 
-The APIVisitor is given an ISSTNode statement and an \textit{APISentenceTree} context such that the statement or expression is added to the context if it is an invocation expression. Recall that we are only interested in invocations and hence not extract any other expressions. The APIVisitor will add every invocation expression to the context and ignore all other expressions.
+In each visit method, the APIVisitor is given an ISSTNode statement or any extension or implementation of an ISSTNode statement and an \textit{APISentenceTree} context such that the statement or expression is added to the context if it is an invocation expression. Recall that we are only interested in invocations and hence not extract any other expressions. The APIVisitor will add every invocation expression to the context and ignore all other expressions.
 
 Additionally, an SST may include statements that would allow for several different API sentences. We call such statements \textit{branching statements}. A branching statement is an if-else-expression or any other conditional statement that would allow for multiple different execution paths and thus multiple different API sentences. We collect the tokens at which branching statements appear in the context so that in a later step we can compute multiple sentences from a single context. The details of how this is done is outlined in the following Section.
 
@@ -51,7 +51,30 @@ Additionally, an SST may include statements that would allow for several differe
 \label{section-apisentencetree}
 
 We introduce the class \textit{APISentenceTree} and use it as our context in the APIVisitor. That is, an APISentenceTree will store a tree representation of all relevant APITokens from an SST that was processed by the APIVisitor.
-Particularly, an APISentenceTree includes a list of APITokens and a map of lists of APISentenceTrees with APITokens as keys. This map stores the branches.
+
+An SST context may include multiple methods. We process SSTs on a per-method basis and create a single APISentenceTree per such method.
+
+Particularly, an APISentenceTree includes a list of APITokens and a map with lists of APISentenceTrees as entries and APITokens as keys. This map stores the branches.
+Whenever the APIVisitor encounters a branching statement, it will create a new branch in the APISentenceTree with the \textit{last valid token}. The last valid token is the last token that was added to the APISentenceTree or a an empty 'null-token` used as a placeholder if there was no token added previously.
+Using a token for branching means that a new entry is added to the map for this token.
+The entry is a list of APISentenceTrees and is empty first.
+A single token can be used to branch multiple times. Suppose an if-else-statement with both, an if-block as well as an else-block. In this case, the last valid token will be used to create two branches, one for the if-block and one for the else-block.
+Similarly, in switch statements a single token might be used for branching several times.
+
+In a later step, after the SST was processed by the APIVisitor, a list of all possible API sentences can be computed from the APISentenceTree. We call this process \textit{flatten}.
+
+Furthermore, as we are interested in obtaining an n-gram language model on a per-API-basis, we \textit{bucketize} API sentences after obtaining them from flattening APISentenceTrees. In this process, we create new API sentences from those that we extracted such that all API tokens in a single API sentence belong to the same namespace.
+This is in accordance with the original paper \cite{Santos2017stepwise}\footnote{For future work, it would be very interesting to train n-gram language models using the API sentences as they were extracted, i.e. non-bucketized, as we believe that this approach might allow for useful recommendations across multiple APIs.}
+
+
+
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=2in]{./section-chapter2/images/apisentencetree-ex1.png}
+%	\caption{Overview of model}
+%	\label{fig:asp-1}
+%\end{figure}
+
 
 
 \subsection{Recommender}
