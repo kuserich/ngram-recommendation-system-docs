@@ -1,8 +1,14 @@
 \section{Theory}
-The theory proposes an IDE-based code completion approach for assisting on writing API sentences. This includes a method to build an API sentence model using an n-gram language model. The main building parts can be seen in (LINK TO IMAGE OVERVIEW). 
+The theory proposes an IDE-based code completion approach for assisting on writing API sentences. This includes a method to build an API sentence model using an n-gram language model. The main building parts can be seen in the following image. 
+
 To provide a recommendation system for code completion it is needed to mine different source code repositories where the API was used. First the API vocabulary has to be determined in order to extract the corresponding API sentences. With these sentences the API language Model can then be built with the extracted information. The N Gram language model can then recommend proposals taking into account the code that is being edited \cite{Santos2017stepwise}. 
 
-(IMAGE ALL COMPONENTS THAT ARE NEEDED)
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{./section-chapter1/images/overview.png}
+	\caption{Overview of model}
+	\label{fig:overview}
+\end{figure}
 
 There are two core processes to set up the recommendation system for specific API's. First there is the sentence Extractor, as can be seen in (LINK TO IMAGE OVERVIEW). It mines a set of API sentences. Then there is the Model Builder component, which uses these API sentences and builds the API sentence model. Then the model is used by a recommender component in an IDE to assist with the proposals for the user agent. The paper from Santos used the Eclipse code completion system. It uses the context from the user to determine the proposed next Token \cite{Santos2017stepwise}. 
 \subsection{Extracting the API sentence}
@@ -14,15 +20,11 @@ A sentence is therefore a sequence of tokens that have a relation to each other.
 
 When mining the API tokens there exist different composite expressions. These expressions were decomposed and treated as having separate instructions. Additionally conditionals and loops are also extracted for each possible branch that they span. The extracted sentence follows the execution order with alternative execution sequences. This includes loops which are treated as if they were conditionals and preserve the execution order \cite{Santos2017stepwise}. 
 
-\subsection{API sentence Model}
-The model builder builds the API n-gram language model from the API sentences. The language model is a statistical model that allows to compute probabilities of a sentence depending on the tokens and is able to predict the next word in a sentence for a given language. A language model has a probability distribution over the API sentences. 
-\cite{Santos2017stepwise}
+\subsection{API sentence Model and Evaluation}
+The model builder builds the API n-gram language model from the API sentences. The language model is a statistical model that allows to compute probabilities of a sentence depending on the tokens and is able to predict the next word in a sentence for a given language. A language model has a probability distribution over the API sentences. In the paper they used N-order Markov assumption  with a corresponding maximum likelihood to compute the probabilities. Given a sequence of tokens it is therefore possible to compute the probabilities of each token. To avoid zero probabilities a Witten-Bell smoothing method was used \cite{Santos2017stepwise}. 
+
+The evaluation of the Model had two main goals. First to measure the performance of the API sentence model against client code and secondly to analyze diverse APIs to characterize how well API sentence model capture regularities in API usage. The researchers concluded that n-grams are powerful for learning API usage patterns because they are effective in capturing regularity. Additionally n-gram models can effectively be used to feed proposals to a code completion system \cite{Santos2017stepwise}. 
 
 
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[height=1in]{./section-chapter1/images/overview.png}
-	\caption{Overview of model}
-	\label{fig:overview}
-\end{figure}
+
